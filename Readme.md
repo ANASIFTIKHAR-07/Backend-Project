@@ -1,3 +1,3 @@
-# a javacript backend project
+# A javacript backend project
 
-This is a project with full backend 
+This is a youtube clone type project with full backend logics
