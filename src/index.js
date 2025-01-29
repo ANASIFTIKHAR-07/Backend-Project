@@ -13,6 +13,10 @@ connnectDB()
     app.listen(process.env.PORT || 8000, ()=> {
         console.log(`Server is running at PORT: ${process.env.PORT}`);
     })
+    app.on("error" , (error)=> {
+        console.log("Server is not running at the PORT, please check the PORT", error);
+        throw error
+    })
 })
 
 .catch((error)=> {
