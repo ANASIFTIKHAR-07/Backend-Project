@@ -4,6 +4,19 @@ import { User } from "../models/user.model.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 
+
+
+
+const addAccessAndRefereshToken = async(userId) => {
+    try {
+        const user = await User.findById(userId)
+          const accessToken = user.generateAccessToken
+          const refreshToken = user.generateRefreshToken
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating Access and referesh tokens!")
+    }
+}
+
 const registerUser = asyncHandler( async (req, res)=> {
     const {fullName, password, userName, email} = req.body
     // console.log("email :", email);
@@ -81,7 +94,11 @@ const loginUser = asyncHandler(async (req, res)=> {
     if (!user) {
         throw new ApiError(404, "User does not exist!")
     }
-    
+    const isPasswordValid = await user.isPasswordCorrect(password)
+
+    if (!isPasswordValid) {
+        throw new ApiError(401, "Password is invalid")
+    }
 })
 
 export { 
