@@ -86,10 +86,18 @@ const registerUser = asyncHandler( async (req, res)=> {
 
 const loginUser = asyncHandler(async (req, res)=> {
     const {userName, email, password} = req.body
+    console.log(email);
+    
 
-    if (!email || !userName) {
+    if (!email && !userName) {
         throw new ApiError(400, "Username or Email is required!")
     }
+
+     // Here is an alternative of above code based on logic discussed in video:
+    // if (!(username || email)) {
+    //     throw new ApiError(400, "username or email is required")
+        
+    // }
 
      const user = await User.findOne({
         $or: [{ email }, { userName }]
@@ -98,9 +106,11 @@ const loginUser = asyncHandler(async (req, res)=> {
         throw new ApiError(404, "User does not exist!")
     }
     const isPasswordValid = await user.isPasswordCorrect(password)
+    console.log(password);
+    
 
     if (!isPasswordValid) {
-        throw new ApiError(401, "Password is invalid")
+        throw new ApiError(401, "Password is incorrect")
     }
 
     const {accessToken, refreshToken} = await addAccessAndRefreshToken(user._id)
@@ -147,7 +157,11 @@ const logoutUser = asyncHandler(async(req, res)=> {
         .status(200)
         .clearCookie("accessToken", options)
         .clearCookie("refreshToken", options)
-        .json(200, {}, "User Logged Out")
+        .json(new ApiResponse(
+            200,
+            {},
+            "User logged out successfully"
+        ))
 })
 
 export { 
