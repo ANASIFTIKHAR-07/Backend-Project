@@ -86,7 +86,7 @@ const registerUser = asyncHandler( async (req, res)=> {
 
 const loginUser = asyncHandler(async (req, res)=> {
     const {userName, email, password} = req.body
-    console.log(email);
+    // console.log(email);
     
 
     if (!email && !userName) {
@@ -106,7 +106,7 @@ const loginUser = asyncHandler(async (req, res)=> {
         throw new ApiError(404, "User does not exist!")
     }
     const isPasswordValid = await user.isPasswordCorrect(password)
-    console.log(password);
+    // console.log(password);
     
 
     if (!isPasswordValid) {
