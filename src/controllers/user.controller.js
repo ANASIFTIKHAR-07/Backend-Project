@@ -246,7 +246,7 @@ const updateAccountDetails = asyncHandler(async(req, res)=> {
             throw new ApiError(400, "All fields are required")
         }
 
-        const user = User.findByIdAndUpdate(
+        const user = await User.findByIdAndUpdate(
             req.user?._id,
             {
                 $set: {
@@ -259,7 +259,10 @@ const updateAccountDetails = asyncHandler(async(req, res)=> {
 
         res
         .status(200)
-        .json(new ApiResponse(200 , user, "Account details updated successfully"))
+        .json(new ApiResponse(
+            200 ,
+            user,
+            "Account details updated successfully"))
 })
 
 const updateUserAvatar = asyncHandler(async(req, res)=> {
@@ -288,11 +291,14 @@ const updateUserAvatar = asyncHandler(async(req, res)=> {
       return res
       .status(200)
       .json(
-        new ApiResponse(200, user, "Avatar image updated successfully")
+        new ApiResponse(
+            200,
+            user,
+            "Avatar image updated successfully")
     )
 })
 
-const updateUserCoverImage = asyncHandler(async(req, res)=> {
+const updateUserCoverImage =  asyncHandler(async(req, res)=> {
     const coverImageLocalPath = req?.file.path
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover image is missing")
@@ -317,7 +323,10 @@ const updateUserCoverImage = asyncHandler(async(req, res)=> {
     return res
     .status(200)
     .json(
-        new ApiResponse(200, user, "Avatar image updated successfully")
+        new ApiResponse(
+            200,
+            user,
+            "Avatar image updated successfully")
     )
 })
 export { 
