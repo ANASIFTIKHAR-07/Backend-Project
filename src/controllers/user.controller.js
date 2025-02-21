@@ -4,7 +4,6 @@ import { User } from "../models/user.model.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
-import { url } from "inspector"
 
 
 
@@ -329,6 +328,55 @@ const updateUserCoverImage =  asyncHandler(async(req, res)=> {
             "Avatar image updated successfully")
     )
 })
+
+
+const getUserChannelProfile = asyncHandler(async (req, res)=> {
+        const {userName} = req.params
+
+        if (!userName?.trim()) {
+            throw new ApiError(400, "Username is missing!")
+        }
+
+        const channel = await User.aggregate([
+                {
+                    $match: { // Directly matches the entity stored in the database without accessing via find() methods of mongoDB
+                        userName: userName?.toLowerCase(),
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "subscriptions",
+                        localField: "_id",
+                        foreignField: "channel",
+                        as: "subscribers"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "subscriptions",
+                        localField: "_id",
+                        foreignField: "subscriber",
+                        as: "subscribedTo"
+                    }
+                },
+                {
+                    $addFields: {
+                        subscribersCount: {
+                            $size: "$subscribers"
+                        },
+                        channelsSubscribedToCount: {
+                            $size: "$subscribedTo" 
+                        },
+                        isSubscribedTo: {
+                            if: {$in: [req.user?._id , "$subscribers.subscriber"]},
+                            then: true,
+                            else: false,
+                        }
+                    }
+
+                }
+        ])
+})
 export { 
     registerUser,
     loginUser,
@@ -338,5 +386,6 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    getUserChannelProfile
 } 
