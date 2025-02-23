@@ -432,6 +432,11 @@ const getWatchHistory = asyncHandler(async(req, res)=> {
                                     }
                                 ]
                             }
+                        },
+                        {
+                            $addFields: {
+                                $first: "$owner"
+                            }
                         }
                     ]
                 }
