@@ -5,7 +5,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose"
-
+import {ObjectId} from "bson"
 
 
 
@@ -406,7 +406,7 @@ const getWatchHistory = asyncHandler(async(req, res)=> {
         const user = await User.aggregate([
               {
                 $match: {
-                    _id: new mongoose.Types.ObjectId(req.user._id)
+                    _id: new mongoose.mongo.ObjectId(req.user._id)
                 }
               },
               {
