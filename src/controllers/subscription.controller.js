@@ -12,8 +12,14 @@ const toggleSubscription = asyncHandler(async(req, res)=> {
 
 
 
+const getUserChannelSubscriber = asyncHandler(async(req, res)=> {
+    const { channelId }= req.params
+})
+
+
 
 
 export{
     toggleSubscription,
+    getUserChannelSubscriber,
 }
