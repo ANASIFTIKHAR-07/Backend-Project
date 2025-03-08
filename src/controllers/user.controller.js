@@ -406,7 +406,7 @@ const getWatchHistory = asyncHandler(async(req, res)=> {
               {
                 $match: {
                     _id: {
-                        $toObjectId : req.user._id
+                        $toObjectId : req.user._id // This is the new method of comparing the id stored in the DB with the user one
                     }
                 }
               },
